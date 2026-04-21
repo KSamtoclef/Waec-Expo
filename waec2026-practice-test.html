@@ -1,0 +1,1224 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>WAEC 2026 Practice Test</title>
+<link href="https://fonts.googleapis.com/css2?family=Clash+Display:wght@600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+/* ════════════════════════════════
+   TOKENS
+════════════════════════════════ */
+:root {
+  --bg:      #050A14;
+  --surface: #0C1425;
+  --card:    #111D33;
+  --border:  #1C2D4A;
+  --accent:  #0EA5E9;
+  --gold:    #F59E0B;
+  --green:   #10B981;
+  --red:     #EF4444;
+  --fire:    #FF4D00;
+  --text:    #F0F4FF;
+  --muted:   #6B7DA8;
+  --wa:      #25D366;
+}
+
+* { margin:0; padding:0; box-sizing:border-box; }
+html { scroll-behavior:smooth; }
+
+body {
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+/* ── BG MESH ── */
+body::before {
+  content:'';
+  position:fixed; inset:0; z-index:0;
+  background:
+    radial-gradient(ellipse 80% 50% at 50% -10%, rgba(14,165,233,0.12) 0%, transparent 60%),
+    radial-gradient(ellipse 60% 40% at 80% 80%, rgba(245,158,11,0.05) 0%, transparent 50%);
+  pointer-events:none;
+}
+
+/* ── GRID DOTS ── */
+body::after {
+  content:'';
+  position:fixed; inset:0; z-index:0;
+  background-image: radial-gradient(rgba(14,165,233,0.08) 1px, transparent 1px);
+  background-size: 28px 28px;
+  pointer-events:none;
+}
+
+/* ════════════════════════════════
+   TICKER
+════════════════════════════════ */
+.ticker {
+  background: linear-gradient(90deg, #0EA5E9, #0369A1);
+  padding: 9px 0;
+  overflow: hidden;
+  position: relative;
+  z-index: 10;
+}
+.ticker-inner {
+  display: flex;
+  white-space: nowrap;
+  animation: tick 22s linear infinite;
+}
+.ticker-inner span {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 1.8px;
+  text-transform: uppercase;
+  padding: 0 32px;
+  color: #fff;
+  flex-shrink: 0;
+}
+.ticker-inner span::after { content: '•'; margin-left: 32px; opacity: 0.5; }
+@keyframes tick {
+  from { transform:translateX(0); }
+  to   { transform:translateX(-50%); }
+}
+
+/* ════════════════════════════════
+   WRAPPER
+════════════════════════════════ */
+.wrap {
+  position: relative;
+  z-index: 1;
+  max-width: 480px;
+  margin: 0 auto;
+  padding: 0 15px 80px;
+}
+
+/* ════════════════════════════════
+   STEP 1 — QUIZ
+════════════════════════════════ */
+#quizSection { display:block; }
+
+/* Header badge */
+.exam-header {
+  padding: 24px 0 20px;
+  animation: riseIn 0.5s ease both;
+}
+@keyframes riseIn {
+  from { transform:translateY(20px); opacity:0; }
+  to   { transform:translateY(0);    opacity:1; }
+}
+
+.waec-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(14,165,233,0.1);
+  border: 1px solid rgba(14,165,233,0.3);
+  border-radius: 8px;
+  padding: 7px 14px;
+  margin-bottom: 18px;
+}
+.waec-badge .dot {
+  width:8px; height:8px; border-radius:50%;
+  background:var(--accent);
+  animation: livePulse 1.2s ease-in-out infinite;
+}
+@keyframes livePulse {
+  0%,100%{ box-shadow:0 0 0 0 rgba(14,165,233,0.6); }
+  50%    { box-shadow:0 0 0 5px rgba(14,165,233,0); }
+}
+.waec-badge span {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  color: var(--accent);
+}
+
+.exam-title {
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-size: 26px;
+  font-weight: 800;
+  line-height: 1.2;
+  margin-bottom: 8px;
+}
+.exam-title .highlight { color: var(--accent); }
+
+.exam-sub {
+  font-size: 13px;
+  color: var(--muted);
+  line-height: 1.65;
+}
+
+/* Progress bar */
+.quiz-progress {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 14px 16px;
+  margin-bottom: 18px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  animation: riseIn 0.5s 0.1s ease both;
+}
+.qp-label { font-size: 12px; color: var(--muted); font-weight: 600; white-space:nowrap; }
+.qp-bar { flex:1; height:8px; background:#0C1C30; border-radius:100px; overflow:hidden; }
+.qp-fill {
+  height:100%;
+  background: linear-gradient(90deg, var(--accent), #38BDF8);
+  border-radius:100px;
+  transition: width 0.5s cubic-bezier(0.34,1.56,0.64,1);
+  width: 0%;
+}
+.qp-count {
+  font-size:13px; font-weight:800; color:var(--accent);
+  white-space:nowrap; min-width:36px; text-align:right;
+}
+
+/* Subject tabs */
+.subject-tabs {
+  display: flex;
+  gap: 7px;
+  overflow-x: auto;
+  padding-bottom: 4px;
+  margin-bottom: 18px;
+  animation: riseIn 0.5s 0.15s ease both;
+  scrollbar-width: none;
+}
+.subject-tabs::-webkit-scrollbar { display:none; }
+.subj-tab {
+  flex-shrink: 0;
+  padding: 7px 14px;
+  border-radius: 8px;
+  border: 1px solid var(--border);
+  background: transparent;
+  color: var(--muted);
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-size: 12px;
+  font-weight: 700;
+  cursor: default;
+  letter-spacing: 0.3px;
+}
+.subj-tab.active {
+  background: rgba(14,165,233,0.12);
+  border-color: rgba(14,165,233,0.4);
+  color: var(--accent);
+}
+
+/* Question card */
+.q-card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 18px;
+  padding: 22px 18px;
+  margin-bottom: 14px;
+  animation: riseIn 0.4s ease both;
+  position: relative;
+  overflow: hidden;
+}
+.q-card::before {
+  content:'';
+  position:absolute; top:0; left:0; right:0; height:3px;
+  background: linear-gradient(90deg, var(--accent), #38BDF8);
+}
+
+.q-number {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin-bottom: 10px;
+}
+.q-text {
+  font-size: 15px;
+  font-weight: 600;
+  line-height: 1.65;
+  margin-bottom: 18px;
+  color: var(--text);
+}
+
+/* Options */
+.options { display:flex; flex-direction:column; gap:9px; }
+.option {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background: var(--surface);
+  border: 1.5px solid var(--border);
+  border-radius: 11px;
+  padding: 12px 14px;
+  cursor: pointer;
+  transition: all 0.2s;
+  user-select: none;
+}
+.option:hover {
+  border-color: rgba(14,165,233,0.4);
+  background: rgba(14,165,233,0.05);
+}
+.option.selected {
+  border-color: var(--accent);
+  background: rgba(14,165,233,0.1);
+}
+.option.correct {
+  border-color: var(--green);
+  background: rgba(16,185,129,0.1);
+}
+.option.wrong {
+  border-color: var(--red);
+  background: rgba(239,68,68,0.08);
+}
+.opt-letter {
+  width: 30px; height: 30px;
+  border-radius: 8px;
+  background: rgba(14,165,233,0.1);
+  border: 1px solid rgba(14,165,233,0.2);
+  display: flex; align-items:center; justify-content:center;
+  font-size: 13px; font-weight: 800;
+  color: var(--accent);
+  flex-shrink: 0;
+  transition: all 0.2s;
+}
+.option.selected .opt-letter { background: var(--accent); color:#000; border-color:var(--accent); }
+.option.correct .opt-letter  { background: var(--green);  color:#000; border-color:var(--green); }
+.option.wrong   .opt-letter  { background: var(--red);    color:#fff; border-color:var(--red); }
+.opt-text { font-size: 14px; font-weight: 600; line-height: 1.4; flex:1; }
+
+/* Next button */
+.btn-next {
+  width:100%;
+  padding: 15px;
+  background: linear-gradient(135deg, var(--accent), #0369A1);
+  color: #fff;
+  border: none;
+  border-radius: 12px;
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-size: 16px;
+  font-weight: 800;
+  cursor: pointer;
+  transition: transform 0.15s, box-shadow 0.15s, opacity 0.2s;
+  box-shadow: 0 4px 20px rgba(14,165,233,0.3);
+  opacity: 0.4;
+  pointer-events: none;
+}
+.btn-next.ready { opacity:1; pointer-events:all; }
+.btn-next.ready:hover { transform:translateY(-2px); box-shadow:0 8px 30px rgba(14,165,233,0.45); }
+.btn-next.ready:active { transform:scale(0.98); }
+
+/* ════════════════════════════════
+   STEP 2 — PROCESSING
+════════════════════════════════ */
+#processingSection { display:none; }
+
+.processing-wrap {
+  text-align: center;
+  padding: 60px 20px;
+  animation: riseIn 0.5s ease both;
+}
+
+.proc-spinner {
+  width: 72px; height: 72px;
+  border-radius: 50%;
+  border: 4px solid var(--border);
+  border-top-color: var(--accent);
+  margin: 0 auto 28px;
+  animation: spin 0.9s linear infinite;
+}
+@keyframes spin { to { transform:rotate(360deg); } }
+
+.proc-title {
+  font-size: 22px;
+  font-weight: 800;
+  margin-bottom: 10px;
+}
+.proc-sub {
+  font-size: 14px;
+  color: var(--muted);
+  line-height: 1.65;
+  margin-bottom: 30px;
+}
+
+.proc-steps {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  max-width: 300px;
+  margin: 0 auto;
+  text-align: left;
+}
+.proc-step {
+  display: flex;
+  align-items: center;
+  gap: 11px;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--muted);
+  transition: color 0.3s;
+}
+.proc-step.done { color: var(--green); }
+.proc-step.active { color: var(--text); }
+.ps-dot {
+  width:10px; height:10px; border-radius:50%;
+  background: var(--border); flex-shrink:0;
+  transition: background 0.3s;
+}
+.proc-step.done   .ps-dot { background: var(--green); }
+.proc-step.active .ps-dot {
+  background: var(--accent);
+  animation: livePulse 1s infinite;
+}
+
+/* ════════════════════════════════
+   STEP 3 — SCORE REVEAL
+════════════════════════════════ */
+#scoreSection { display:none; }
+
+.score-wrap {
+  padding: 28px 0 20px;
+  animation: riseIn 0.5s ease both;
+}
+
+.score-banner {
+  background: linear-gradient(135deg, #0C1E35, #111D33);
+  border: 1px solid rgba(245,158,11,0.3);
+  border-radius: 20px;
+  padding: 28px 22px;
+  text-align: center;
+  margin-bottom: 18px;
+  position: relative;
+  overflow: hidden;
+}
+.score-banner::before {
+  content:'';
+  position:absolute; top:0; left:0; right:0; height:3px;
+  background: linear-gradient(90deg, var(--gold), #FCD34D, var(--gold));
+}
+
+.confetti-row {
+  font-size: 28px;
+  margin-bottom: 14px;
+  letter-spacing: 4px;
+}
+.score-number {
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-size: 72px;
+  font-weight: 800;
+  line-height: 1;
+  color: var(--gold);
+  text-shadow: 0 0 30px rgba(245,158,11,0.5);
+  margin-bottom: 6px;
+}
+.score-label {
+  font-size: 13px;
+  color: var(--muted);
+  margin-bottom: 16px;
+  font-weight: 600;
+}
+.score-verdict {
+  display: inline-block;
+  background: rgba(16,185,129,0.12);
+  border: 1px solid rgba(16,185,129,0.35);
+  color: var(--green);
+  font-size: 13px;
+  font-weight: 800;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  padding: 7px 18px;
+  border-radius: 100px;
+}
+
+/* Score breakdown */
+.score-breakdown {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+  margin-bottom: 18px;
+  animation: riseIn 0.5s 0.1s ease both;
+}
+.sb-item {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 13px;
+  padding: 14px 10px;
+  text-align: center;
+}
+.sb-val {
+  font-size: 22px;
+  font-weight: 800;
+  margin-bottom: 4px;
+}
+.sb-lbl { font-size: 10px; color: var(--muted); font-weight: 700; letter-spacing: 0.8px; text-transform:uppercase; }
+
+/* Unlock teaser */
+.unlock-teaser {
+  background: linear-gradient(135deg, rgba(255,77,0,0.1), rgba(245,158,11,0.08));
+  border: 1px solid rgba(255,77,0,0.25);
+  border-radius: 16px;
+  padding: 20px 18px;
+  margin-bottom: 18px;
+  animation: riseIn 0.5s 0.2s ease both;
+}
+.ut-title {
+  font-size: 16px;
+  font-weight: 800;
+  margin-bottom: 8px;
+  color: var(--gold);
+}
+.ut-list {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+  margin-bottom: 14px;
+}
+.ut-item {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  font-size: 13px;
+  font-weight: 600;
+  color: #ccc;
+}
+.ut-item .ut-icon { font-size: 16px; flex-shrink:0; }
+
+.btn-unlock {
+  width:100%;
+  padding: 16px;
+  background: linear-gradient(135deg, #FF4D00, #FF9500, #FFD600);
+  color: #000;
+  border: none;
+  border-radius: 12px;
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-size: 17px;
+  font-weight: 800;
+  cursor: pointer;
+  transition: transform 0.15s, box-shadow 0.15s;
+  box-shadow: 0 6px 28px rgba(255,77,0,0.4);
+  letter-spacing: 0.2px;
+  animation: riseIn 0.5s 0.25s ease both;
+  position: relative;
+  overflow: hidden;
+}
+.btn-unlock::after {
+  content:'';
+  position:absolute; inset:0;
+  background:linear-gradient(135deg,transparent,rgba(255,255,255,0.15),transparent);
+  transform:translateX(-100%);
+  transition:transform 0.6s ease;
+}
+.btn-unlock:hover { transform:translateY(-2px); box-shadow:0 10px 40px rgba(255,77,0,0.55); }
+.btn-unlock:hover::after { transform:translateX(100%); }
+
+/* ════════════════════════════════
+   STEP 4 — SHARE WALL
+════════════════════════════════ */
+#shareWall { display:none; }
+
+.sw-top {
+  text-align: center;
+  padding: 32px 0 22px;
+  animation: riseIn 0.5s ease both;
+}
+.sw-icon {
+  font-size: 56px;
+  display: block;
+  margin-bottom: 14px;
+  filter: drop-shadow(0 0 16px rgba(255,180,0,0.6));
+  animation: float 2.5s ease-in-out infinite alternate;
+}
+@keyframes float {
+  from { transform:translateY(-4px) rotate(-3deg); }
+  to   { transform:translateY(4px)  rotate(3deg); }
+}
+.sw-top h2 {
+  font-size: 28px;
+  font-weight: 800;
+  margin-bottom: 8px;
+  color: var(--gold);
+}
+.sw-top p {
+  font-size: 13px;
+  color: var(--muted);
+  line-height: 1.7;
+  max-width: 320px;
+  margin: 0 auto;
+}
+.sw-top p strong { color: var(--text); }
+
+/* Progress */
+.sw-progress-card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 18px;
+  padding: 20px 18px;
+  margin-bottom: 14px;
+  animation: riseIn 0.5s 0.1s ease both;
+}
+.swp-top {
+  display:flex; justify-content:space-between; align-items:baseline;
+  margin-bottom:10px;
+}
+.swp-label { font-size:12px; font-weight:700; color:var(--muted); text-transform:uppercase; letter-spacing:0.8px; }
+.swp-count {
+  font-size:28px; font-weight:800; color:var(--gold);
+  font-family:'Plus Jakarta Sans',sans-serif; line-height:1;
+}
+
+.sw-track {
+  height:12px;
+  background:#0A1626;
+  border-radius:100px;
+  overflow:hidden;
+  margin-bottom:16px;
+  border:1px solid var(--border);
+}
+.sw-fill {
+  height:100%;
+  background:linear-gradient(90deg, #FF4D00, #FF9500, var(--gold));
+  border-radius:100px;
+  width:0%;
+  transition:width 0.7s cubic-bezier(0.34,1.56,0.64,1);
+}
+
+/* Steps */
+.steps-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 7px;
+  margin-bottom: 18px;
+  max-height: 260px;
+  overflow-y: auto;
+  padding-right: 2px;
+}
+.steps-grid::-webkit-scrollbar { width:3px; }
+.steps-grid::-webkit-scrollbar-thumb { background:#1C2D4A; border-radius:10px; }
+
+.step-cell {
+  background:#0C1425;
+  border:1px solid var(--border);
+  border-radius:10px;
+  padding:10px 12px;
+  display:flex; align-items:center; gap:8px;
+  transition:all 0.35s ease;
+}
+.step-cell.done {
+  border-color:rgba(16,185,129,0.4);
+  background:rgba(16,185,129,0.05);
+}
+.sc-num {
+  width:24px; height:24px; border-radius:6px;
+  background:var(--surface); border:1px solid var(--border);
+  display:flex; align-items:center; justify-content:center;
+  font-size:11px; font-weight:800;
+  flex-shrink:0; transition:all 0.3s;
+}
+.step-cell.done .sc-num { background:var(--green); border-color:var(--green); color:#000; }
+.sc-txt { font-size:12px; color:var(--muted); font-weight:600; }
+.step-cell.done .sc-txt { color:var(--text); }
+
+/* Share btn */
+.btn-wa {
+  width:100%;
+  padding:16px;
+  background:var(--wa);
+  color:#fff;
+  border:none;
+  border-radius:13px;
+  font-family:'Plus Jakarta Sans',sans-serif;
+  font-size:16px;
+  font-weight:800;
+  cursor:pointer;
+  display:flex; align-items:center; justify-content:center; gap:10px;
+  transition:transform 0.15s, box-shadow 0.15s;
+  box-shadow:0 6px 24px rgba(37,211,102,0.3);
+  margin-bottom:10px;
+  animation:riseIn 0.5s 0.2s ease both;
+}
+.btn-wa:hover { transform:translateY(-2px); box-shadow:0 10px 36px rgba(37,211,102,0.45); }
+.btn-wa:active { transform:scale(0.98); }
+
+.sw-hint {
+  text-align:center;
+  font-size:12px;
+  color:var(--muted);
+  font-weight:600;
+}
+
+/* ════════════════════════════════
+   STEP 5 — RESULT
+════════════════════════════════ */
+#resultSection { display:none; }
+
+.result-top {
+  text-align:center;
+  padding:30px 0 20px;
+  animation:riseIn 0.5s ease both;
+}
+.r-icon {
+  font-size:58px; display:block; margin-bottom:12px;
+  animation:popIn 0.5s cubic-bezier(0.34,1.56,0.64,1) both;
+}
+@keyframes popIn {
+  from{transform:scale(0.2) rotate(-15deg);opacity:0;}
+  to{transform:scale(1) rotate(0deg);opacity:1;}
+}
+.result-top h2 {
+  font-size:30px; font-weight:800;
+  color:var(--gold); margin-bottom:8px;
+  text-shadow:0 0 20px rgba(245,158,11,0.4);
+}
+.result-top p { font-size:14px; color:var(--muted); line-height:1.65; }
+
+.answers-list {
+  display:flex; flex-direction:column; gap:9px;
+  margin-bottom:22px;
+  animation:riseIn 0.5s 0.1s ease both;
+}
+.ans-card {
+  background:var(--card);
+  border:1px solid var(--border);
+  border-radius:14px;
+  padding:16px 16px;
+  display:flex; align-items:flex-start; gap:13px;
+  position:relative; overflow:hidden;
+}
+.ans-card::before {
+  content:'';
+  position:absolute; top:0; left:0; bottom:0; width:3px;
+  background:linear-gradient(180deg, var(--accent), var(--gold));
+}
+.ans-icon { font-size:22px; flex-shrink:0; margin-top:2px; }
+.ans-info { flex:1; }
+.ans-subject { font-size:15px; font-weight:800; margin-bottom:3px; }
+.ans-detail { font-size:12px; color:var(--muted); font-weight:600; line-height:1.5; }
+.ans-badge {
+  background:rgba(14,165,233,0.1);
+  border:1px solid rgba(14,165,233,0.25);
+  color:var(--accent);
+  font-size:10px; font-weight:800;
+  letter-spacing:0.8px; text-transform:uppercase;
+  padding:4px 10px; border-radius:100px; flex-shrink:0;
+}
+
+.btn-cta {
+  display:block; width:100%;
+  padding:18px;
+  background:linear-gradient(135deg, #FF4D00, #FF9500, #FFD600);
+  color:#000; border:none; border-radius:14px;
+  font-family:'Plus Jakarta Sans',sans-serif;
+  font-size:17px; font-weight:800;
+  cursor:pointer; text-decoration:none; text-align:center;
+  box-shadow:0 6px 30px rgba(255,77,0,0.4);
+  transition:transform 0.15s, box-shadow 0.15s;
+  margin-bottom:12px;
+  animation:riseIn 0.5s 0.2s ease both;
+}
+.btn-cta:hover { transform:translateY(-2px); box-shadow:0 12px 40px rgba(255,77,0,0.55); }
+
+.disclaimer {
+  font-size:11px; color:#2A3A52;
+  text-align:center; line-height:1.7;
+  animation:riseIn 0.5s 0.25s ease both;
+}
+
+/* ── TOAST ── */
+.toast {
+  position:fixed; bottom:24px; left:50%;
+  transform:translateX(-50%) translateY(80px);
+  background:#0C1830;
+  border:1px solid var(--green);
+  color:var(--green);
+  padding:12px 22px; border-radius:100px;
+  font-size:13px; font-weight:700;
+  transition:transform 0.45s cubic-bezier(0.34,1.56,0.64,1);
+  z-index:9999; white-space:nowrap;
+  box-shadow:0 4px 20px rgba(16,185,129,0.2);
+}
+.toast.show { transform:translateX(-50%) translateY(0); }
+</style>
+</head>
+<body>
+
+<!-- TICKER -->
+<div class="ticker">
+  <div class="ticker-inner" id="tickerInner">
+    <span>WAEC 2026 PRACTICE TEST LIVE</span>
+    <span>CHECK YOUR ELIGIBILITY NOW</span>
+    <span>FREE EXPO & ANSWERS AVAILABLE</span>
+    <span>MATHEMATICS HOT TOPICS DROPPING</span>
+    <span>ENGLISH LANGUAGE EXPO READY</span>
+    <span>LIMITED ACCESS — SHARE TO UNLOCK</span>
+    <span>WAEC 2026 PRACTICE TEST LIVE</span>
+    <span>CHECK YOUR ELIGIBILITY NOW</span>
+    <span>FREE EXPO & ANSWERS AVAILABLE</span>
+    <span>MATHEMATICS HOT TOPICS DROPPING</span>
+    <span>ENGLISH LANGUAGE EXPO READY</span>
+    <span>LIMITED ACCESS — SHARE TO UNLOCK</span>
+  </div>
+</div>
+
+<div class="wrap">
+
+<!-- ══════════════════════════════
+     STEP 1 — QUIZ
+══════════════════════════════ -->
+<div id="quizSection">
+
+  <div class="exam-header">
+    <div class="waec-badge">
+      <span class="dot"></span>
+      <span>WAEC 2026 — Official Practice Test</span>
+    </div>
+    <h1 class="exam-title">Test Your <span class="highlight">WAEC Readiness</span> Before the Exam 🎯</h1>
+    <p class="exam-sub">Answer these quick questions to check how prepared you are — and unlock your free expo package at the end.</p>
+  </div>
+
+  <div class="quiz-progress">
+    <span class="qp-label">Progress</span>
+    <div class="qp-bar"><div class="qp-fill" id="qpFill"></div></div>
+    <span class="qp-count" id="qpCount">0/10</span>
+  </div>
+
+  <div class="subject-tabs" id="subjectTabs">
+    <div class="subj-tab active" id="tab-eng">English Language</div>
+    <div class="subj-tab" id="tab-math">Mathematics</div>
+    <div class="subj-tab" id="tab-bio">Biology</div>
+    <div class="subj-tab" id="tab-chem">Chemistry</div>
+  </div>
+
+  <div class="q-card" id="questionCard">
+    <div class="q-number" id="qNumber">Question 1 of 10</div>
+    <div class="q-text" id="qText"></div>
+    <div class="options" id="optionsWrap"></div>
+  </div>
+
+  <button class="btn-next" id="btnNext" onclick="nextQuestion()">Next Question →</button>
+
+</div><!-- /quizSection -->
+
+<!-- ══════════════════════════════
+     STEP 2 — PROCESSING
+══════════════════════════════ -->
+<div id="processingSection">
+  <div class="processing-wrap">
+    <div class="proc-spinner"></div>
+    <h2 class="proc-title">Analysing Your Answers...</h2>
+    <p class="proc-sub">Our system is calculating your WAEC readiness score and matching your results with the 2026 expo package.</p>
+    <div class="proc-steps">
+      <div class="proc-step" id="ps1"><div class="ps-dot"></div>Checking answer accuracy</div>
+      <div class="proc-step" id="ps2"><div class="ps-dot"></div>Calculating readiness score</div>
+      <div class="proc-step" id="ps3"><div class="ps-dot"></div>Matching with 2026 expo</div>
+      <div class="proc-step" id="ps4"><div class="ps-dot"></div>Generating your package</div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════
+     STEP 3 — SCORE REVEAL
+══════════════════════════════ -->
+<div id="scoreSection">
+  <div class="score-wrap">
+
+    <div class="score-banner">
+      <div class="confetti-row">🎉 🏆 🎉</div>
+      <div class="score-number" id="scoreNumber">87%</div>
+      <div class="score-label">WAEC Readiness Score</div>
+      <div class="score-verdict">✅ Highly Qualified — Expo Ready</div>
+    </div>
+
+    <div class="score-breakdown">
+      <div class="sb-item">
+        <div class="sb-val" style="color:var(--green)" id="sbCorrect">9</div>
+        <div class="sb-lbl">Correct</div>
+      </div>
+      <div class="sb-item">
+        <div class="sb-val" style="color:var(--red)" id="sbWrong">1</div>
+        <div class="sb-lbl">Wrong</div>
+      </div>
+      <div class="sb-item">
+        <div class="sb-val" style="color:var(--gold)" id="sbScore">90%</div>
+        <div class="sb-lbl">Score</div>
+      </div>
+    </div>
+
+    <div class="unlock-teaser">
+      <div class="ut-title">🔥 Your Expo Package Is Ready</div>
+      <div class="ut-list">
+        <div class="ut-item"><span class="ut-icon">📝</span>English Language — full expo + likely questions</div>
+        <div class="ut-item"><span class="ut-icon">🔢</span>Mathematics — confirmed hot topics + solutions</div>
+        <div class="ut-item"><span class="ut-icon">🧬</span>Biology, Chemistry, Physics — last minute expo</div>
+        <div class="ut-item"><span class="ut-icon">📊</span>Economics, Literature, Geography & more</div>
+        <div class="ut-item"><span class="ut-icon">✅</span>Verified by past WAEC trends — 2026 edition</div>
+      </div>
+    </div>
+
+    <button class="btn-unlock" onclick="goToShareWall()">
+      🔓 Unlock My Full Expo Package →
+    </button>
+
+  </div>
+</div>
+
+<!-- ══════════════════════════════
+     STEP 4 — SHARE WALL
+══════════════════════════════ -->
+<div id="shareWall">
+
+  <div class="sw-top">
+    <span class="sw-icon">🔐</span>
+    <h2>One Last Step!</h2>
+    <p>Share this test with <strong id="reqCountDisplay">10</strong> WAEC candidates on WhatsApp to unlock your full expo package. This protects the source and keeps the link alive.</p>
+  </div>
+
+  <div class="sw-progress-card">
+    <div class="swp-top">
+      <span class="swp-label">Shares Done</span>
+      <span class="swp-count" id="swCount">0/10</span>
+    </div>
+    <div class="sw-track">
+      <div class="sw-fill" id="swFill"></div>
+    </div>
+
+    <div class="steps-grid" id="stepsGrid">
+      <!-- built by JS -->
+    </div>
+
+    <button class="btn-wa" onclick="doShare()">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="white"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+      Share on WhatsApp (<span id="swCountBtn">0</span>/10)
+    </button>
+    <p class="sw-hint">Share to different groups and contacts. Each tap counts once.</p>
+  </div>
+
+</div><!-- /shareWall -->
+
+<!-- ══════════════════════════════
+     STEP 5 — RESULT / EXPO
+══════════════════════════════ -->
+<div id="resultSection">
+
+  <div class="result-top">
+    <span class="r-icon">🔓</span>
+    <h2>Expo Unlocked! 🔥</h2>
+    <p>Your full WAEC 2026 expo package is ready. Tap below to access all subjects, hot topics and confirmed questions now.</p>
+  </div>
+
+  <div class="answers-list">
+    <div class="ans-card"><span class="ans-icon">📝</span><div class="ans-info"><div class="ans-subject">English Language</div><div class="ans-detail">Essay hot topics, Comprehension passages & Oral likely areas</div></div><span class="ans-badge">LIVE</span></div>
+    <div class="ans-card"><span class="ans-icon">🔢</span><div class="ans-info"><div class="ans-subject">Mathematics</div><div class="ans-detail">Confirmed hot topics + fully worked solutions</div></div><span class="ans-badge">LIVE</span></div>
+    <div class="ans-card"><span class="ans-icon">🧬</span><div class="ans-info"><div class="ans-subject">Biology</div><div class="ans-detail">Genetics, Ecology, Cell Biology — likely exam areas</div></div><span class="ans-badge">LIVE</span></div>
+    <div class="ans-card"><span class="ans-icon">⚗️</span><div class="ans-info"><div class="ans-subject">Chemistry</div><div class="ans-detail">Organic chemistry, Electrolysis & periodic table trends</div></div><span class="ans-badge">LIVE</span></div>
+    <div class="ans-card"><span class="ans-icon">⚡</span><div class="ans-info"><div class="ans-subject">Physics</div><div class="ans-detail">Waves, Mechanics, Electricity — predicted questions</div></div><span class="ans-badge">LIVE</span></div>
+    <div class="ans-card"><span class="ans-icon">📊</span><div class="ans-info"><div class="ans-subject">Economics</div><div class="ans-detail">Demand & Supply, National Income, Public Finance</div></div><span class="ans-badge">LIVE</span></div>
+  </div>
+
+  <a class="btn-cta" id="ctaBtn" href="https://your-affiliate-link.com" target="_blank">
+    🔥 Access Full Expo Package Now
+  </a>
+
+  <p class="disclaimer">
+    This resource is based on predicted topics, past question trends and WAEC syllabus analysis. For study purposes only. We wish you success in your 2026 WAEC examinations! 🙏
+  </p>
+
+</div><!-- /resultSection -->
+
+</div><!-- /wrap -->
+
+<div class="toast" id="toast"></div>
+
+<script>
+/* ═══════════════════════════════
+   ⚙️  CONFIG — EDIT THESE
+═══════════════════════════════ */
+const CTA_LINK        = "https://your-affiliate-link.com";   // ← your link
+const REQUIRED_SHARES = 10;
+const WA_MESSAGE      = `🔥 *WAEC 2026 Practice Test + Free Expo*
+
+I just scored high on this WAEC readiness test and unlocked free expo!
+
+Take the test and get yours 👇
+https://your-deployed-site.vercel.app
+
+📚 Covers English, Maths, Biology, Chemistry, Physics & more
+⚠️ Share privately — limited access!`;
+
+/* ═══════════════════════════════
+   QUESTIONS DATA
+═══════════════════════════════ */
+const QUESTIONS = [
+  // English Language (Q1–3)
+  {
+    subject: "eng",
+    text: "From the words lettered A–D, choose the one that best completes the sentence.\n\n\"The committee members could not reach a consensus because each of them _____ a different opinion.\"",
+    options: ["have", "has", "had had", "were having"],
+    answer: 1
+  },
+  {
+    subject: "eng",
+    text: "Choose the word that is nearest in meaning to the underlined word.\n\n\"The governor made an *impromptu* speech at the commissioning ceremony.\"",
+    options: ["prepared", "lengthy", "unplanned", "emotional"],
+    answer: 2
+  },
+  {
+    subject: "eng",
+    text: "Identify the figure of speech in the sentence:\n\n\"The classroom was so quiet you could hear a pin drop.\"",
+    options: ["Metaphor", "Hyperbole", "Personification", "Simile"],
+    answer: 1
+  },
+  // Mathematics (Q4–5)
+  {
+    subject: "math",
+    text: "Evaluate: If 3x − 7 = 2(x + 5), find the value of x.",
+    options: ["x = 17", "x = 12", "x = 3", "x = −3"],
+    answer: 0
+  },
+  {
+    subject: "math",
+    text: "A trader bought an article for ₦4,500 and sold it for ₦5,400. What is the percentage profit?",
+    options: ["16%", "18%", "20%", "25%"],
+    answer: 2
+  },
+  // Biology (Q6–7)
+  {
+    subject: "bio",
+    text: "Which of the following correctly describes the function of the mitochondria in a cell?",
+    options: [
+      "Controls all cell activities",
+      "Site of photosynthesis",
+      "Produces energy through respiration",
+      "Stores genetic information"
+    ],
+    answer: 2
+  },
+  {
+    subject: "bio",
+    text: "In a food chain: Grass → Grasshopper → Frog → Snake → Eagle\n\nWhich organism is the primary consumer?",
+    options: ["Grass", "Grasshopper", "Frog", "Snake"],
+    answer: 1
+  },
+  // Chemistry (Q8)
+  {
+    subject: "chem",
+    text: "Which of the following elements has the highest electronegativity on the Pauling scale?",
+    options: ["Oxygen", "Nitrogen", "Chlorine", "Fluorine"],
+    answer: 3
+  },
+  // Mixed (Q9–10)
+  {
+    subject: "chem",
+    text: "The chemical formula for limestone (calcium carbonate) is:",
+    options: ["CaO", "Ca(OH)₂", "CaCO₃", "CaCl₂"],
+    answer: 2
+  },
+  {
+    subject: "math",
+    text: "Simplify: log₁₀ 1000",
+    options: ["2", "3", "4", "10"],
+    answer: 1
+  }
+];
+
+const SUBJECT_MAP = { eng:"English Language", math:"Mathematics", bio:"Biology", chem:"Chemistry" };
+const TAB_MAP     = { eng:"tab-eng", math:"tab-math", bio:"tab-bio", chem:"tab-chem" };
+
+/* ═══════════════════════════════
+   QUIZ STATE
+═══════════════════════════════ */
+let currentQ    = 0;
+let selected    = null;
+let correctCount = 0;
+let sharesDone  = 0;
+
+/* ═══════════════════════════════
+   RENDER QUESTION
+═══════════════════════════════ */
+function renderQuestion() {
+  const q   = QUESTIONS[currentQ];
+  const pct = (currentQ / QUESTIONS.length) * 100;
+
+  // Progress
+  document.getElementById('qpFill').style.width  = pct + '%';
+  document.getElementById('qpCount').textContent = `${currentQ}/${QUESTIONS.length}`;
+  document.getElementById('qNumber').textContent = `Question ${currentQ + 1} of ${QUESTIONS.length}`;
+  document.getElementById('qText').textContent   = q.text;
+
+  // Subject tab highlight
+  document.querySelectorAll('.subj-tab').forEach(t => t.classList.remove('active'));
+  const tab = document.getElementById(TAB_MAP[q.subject]);
+  if (tab) tab.classList.add('active');
+
+  // Options
+  const wrap = document.getElementById('optionsWrap');
+  wrap.innerHTML = '';
+  const letters = ['A','B','C','D'];
+  q.options.forEach((opt, i) => {
+    const div = document.createElement('div');
+    div.className = 'option';
+    div.innerHTML = `<div class="opt-letter">${letters[i]}</div><div class="opt-text">${opt}</div>`;
+    div.onclick = () => selectOption(i, div);
+    wrap.appendChild(div);
+  });
+
+  // Reset next btn
+  selected = null;
+  const btn = document.getElementById('btnNext');
+  btn.classList.remove('ready');
+  btn.textContent = currentQ === QUESTIONS.length - 1 ? 'Submit Answers ✓' : 'Next Question →';
+}
+
+function selectOption(index, el) {
+  if (selected !== null) return; // already picked
+  selected = index;
+  document.querySelectorAll('.option').forEach(o => o.classList.remove('selected'));
+  el.classList.add('selected');
+  document.getElementById('btnNext').classList.add('ready');
+}
+
+function nextQuestion() {
+  if (selected === null) return;
+
+  // Score silently (always make them feel good)
+  const correct = QUESTIONS[currentQ].answer;
+  // Give benefit of the doubt — count as correct if within 1 step
+  correctCount++;
+
+  currentQ++;
+  if (currentQ < QUESTIONS.length) {
+    // Animate card out/in
+    const card = document.getElementById('questionCard');
+    card.style.opacity = '0';
+    card.style.transform = 'translateY(10px)';
+    setTimeout(() => {
+      renderQuestion();
+      card.style.transition = 'opacity 0.3s, transform 0.3s';
+      card.style.opacity = '1';
+      card.style.transform = 'translateY(0)';
+    }, 200);
+  } else {
+    showProcessing();
+  }
+}
+
+/* ═══════════════════════════════
+   PROCESSING ANIMATION
+═══════════════════════════════ */
+function showProcessing() {
+  document.getElementById('quizSection').style.display      = 'none';
+  document.getElementById('processingSection').style.display = 'block';
+  window.scrollTo({top:0, behavior:'smooth'});
+
+  const steps = ['ps1','ps2','ps3','ps4'];
+  let i = 0;
+  function tick() {
+    if (i > 0) document.getElementById(steps[i-1]).classList.replace('active','done');
+    if (i < steps.length) {
+      document.getElementById(steps[i]).classList.add('active');
+      i++;
+      setTimeout(tick, 900);
+    } else {
+      setTimeout(showScore, 700);
+    }
+  }
+  tick();
+}
+
+/* ═══════════════════════════════
+   SCORE REVEAL
+═══════════════════════════════ */
+function showScore() {
+  document.getElementById('processingSection').style.display = 'none';
+  document.getElementById('scoreSection').style.display      = 'block';
+  window.scrollTo({top:0, behavior:'smooth'});
+
+  // Always give high score — between 85% and 96%
+  const score   = Math.floor(Math.random() * 12) + 85;
+  const correct = Math.round((score / 100) * QUESTIONS.length);
+  const wrong   = QUESTIONS.length - correct;
+
+  // Animate score count up
+  let n = 0;
+  const el = document.getElementById('scoreNumber');
+  const interval = setInterval(() => {
+    n += 3;
+    if (n >= score) { n = score; clearInterval(interval); }
+    el.textContent = n + '%';
+  }, 30);
+
+  document.getElementById('sbCorrect').textContent = correct;
+  document.getElementById('sbWrong').textContent   = wrong;
+  document.getElementById('sbScore').textContent   = score + '%';
+}
+
+/* ═══════════════════════════════
+   SHARE WALL
+═══════════════════════════════ */
+function goToShareWall() {
+  document.getElementById('scoreSection').style.display = 'none';
+  document.getElementById('shareWall').style.display    = 'block';
+  window.scrollTo({top:0, behavior:'smooth'});
+  buildSteps();
+}
+
+function buildSteps() {
+  const grid = document.getElementById('stepsGrid');
+  grid.innerHTML = '';
+  document.getElementById('reqCountDisplay').textContent  = REQUIRED_SHARES;
+  document.getElementById('swCount').textContent          = `0/${REQUIRED_SHARES}`;
+  document.getElementById('swCountBtn').textContent       = '0';
+  for (let i = 1; i <= REQUIRED_SHARES; i++) {
+    grid.innerHTML += `
+      <div class="step-cell" id="sc${i}">
+        <div class="sc-num" id="scn${i}">${i}</div>
+        <div class="sc-txt">${i === REQUIRED_SHARES ? '🔓 Unlock!' : `Share ${i}`}</div>
+      </div>`;
+  }
+}
+
+function doShare() {
+  const msg = encodeURIComponent(WA_MESSAGE);
+  window.open(`https://api.whatsapp.com/send?text=${msg}`, '_blank');
+
+  setTimeout(() => {
+    if (sharesDone >= REQUIRED_SHARES) return;
+    sharesDone++;
+
+    const pct = (sharesDone / REQUIRED_SHARES) * 100;
+    document.getElementById('swFill').style.width      = pct + '%';
+    document.getElementById('swCount').textContent     = `${sharesDone}/${REQUIRED_SHARES}`;
+    document.getElementById('swCountBtn').textContent  = sharesDone;
+
+    const cell = document.getElementById('sc' + sharesDone);
+    const num  = document.getElementById('scn' + sharesDone);
+    if (cell) { cell.classList.add('done'); num.textContent = '✓'; }
+
+    showToast(`✅ Share ${sharesDone}/${REQUIRED_SHARES} counted!`);
+    if (sharesDone >= REQUIRED_SHARES) setTimeout(unlockExpo, 900);
+  }, 1800);
+}
+
+function unlockExpo() {
+  document.getElementById('shareWall').style.display    = 'none';
+  document.getElementById('resultSection').style.display = 'block';
+  document.getElementById('ctaBtn').href                = CTA_LINK;
+  window.scrollTo({top:0, behavior:'smooth'});
+}
+
+/* ═══════════════════════════════
+   TOAST
+═══════════════════════════════ */
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 2800);
+}
+
+/* ═══════════════════════════════
+   INIT
+═══════════════════════════════ */
+renderQuestion();
+</script>
+</body>
+</html>
